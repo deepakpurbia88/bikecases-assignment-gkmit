@@ -1,0 +1,184 @@
+<div class="container-fluid">
+  <div id="filter-container">
+    <form
+      [formGroup]="casesListForm"
+      id="control"
+      (submit)="getCases()"
+      novalidate
+    >
+      <div class="row">
+        <div class="col-xl-1"></div>
+        <div class="col-xl-10">
+          <div class="row">
+            <div class="col-xl-4 col-xs-6">
+              <div class="form-group has-search">
+                <input
+                  class="form-control"
+                  type="text"
+                  name="search"
+                  placeholder="Search case descriptions"
+                  formControlName="searchText"
+                  aria-controls="parentTable"
+                />
+              </div>
+            </div>
+            <div class="col-xl-3 col-xs-6">
+              <div class="form-group">
+                <div class="input-group" id="datematpick">
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    name="dp"
+                    placeholder="from"
+                    formControlName="fromDate"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker">
+                    <mat-icon matDatepickerToggleIcon>
+                      <img src="assets/images/calendar.png" />
+                    </mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-xs-6">
+              <div class="form-group">
+                <div class="input-group" id="datematpick">
+                  <input
+                    matInput
+                    [matDatepicker]="picker1"
+                    name="dp"
+                    placeholder="to"
+                    formControlName="toDate"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker1">
+                    <mat-icon matDatepickerToggleIcon>
+                      <img src="assets/images/calendar.png" />
+                    </mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-2 col-xs-4">
+              <button type="submit" class="btn btn-primary btn-block">
+                Find cases
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-1"></div>
+      </div>
+      <div class="row">
+        <div class="col-xl-1"></div>
+        <div class="col-xl-10 col-xs-12">
+          <small *ngIf="casesListForm.invalid" class="errorClass">
+            Date Error: From date can't be greater than To date.</small
+          >
+        </div>
+        <div class="col-xl-1"></div>
+      </div>
+    </form>
+  </div>
+
+  <div id="cases-container" *ngIf="!loadingFlag">
+    <br />
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10 text-right">total: {{ casesList.length }}</div>
+      <div class="col-xl-1"></div>
+    </div>
+    <br />
+    <div *ngIf="casesList.length > 0">
+      <div
+        *ngFor="
+          let case of casesList
+            | slice: (page - 1) * pageSize:(page - 1) * pageSize + pageSize
+        "
+      >
+        <div class="row">
+          <div class="col-xl-1"></div>
+          <div class="col-xl-10">
+            <div class="card">
+              <div class="card-horizontal">
+                <div class="img-square-wrapper">
+                  <span *ngIf="case.media.image_url_thumb != null"
+                    ><img
+                      class="imgStyle"
+                      src="{{ case.media.image_url_thumb }}"
+                      alt="{{ case.title }}"
+                  /></span>
+                  <span *ngIf="case.media.image_url_thumb === null"
+                    ><img
+                      class="imgStyle"
+                      src="assets/images/default-thumbnail.png"
+                      alt="{{ case.title }}"
+                  /></span>
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <a href="Javascript:void(0)" (click)="getCaseDetails(case)">
+                      {{ case.title }}
+                    </a>
+                  </h4>
+                  <p class="card-text">
+                    {{ case.description }}
+                  </p>
+                  <p class="card-text">
+                    {{ case.occurred_at | date: "EEE MMM d y" }} -
+                    {{ case.address }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-1"></div>
+        </div>
+        <br />
+      </div>
+    </div>
+
+    <div class="row" *ngIf="casesList.length === 0 && !getListErrorFlag">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        No results
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+    <div *ngIf="getListErrorFlag" class="row errorClass">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        Ooops, something went wrong.
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+
+    <div id="pagination-container" *ngIf="casesList.length > 0">
+      <div class="row">
+        <div class="col-xl-4"></div>
+        <div class="col-xl-4">
+          <ngb-pagination
+            [collectionSize]="casesList.length"
+            [(page)]="page"
+            [maxSize]="5"
+            [rotate]="true"
+            [ellipses]="false"
+            [boundaryLinks]="true"
+            ><ng-template ngbPaginationFirst>{{ first }}</ng-template>
+            <ng-template ngbPaginationLast>{{ last }}</ng-template>
+            <ng-template ngbPaginationPrevious>{{ prev }}</ng-template>
+            <ng-template ngbPaginationNext>{{ next }}</ng-template>
+          </ngb-pagination>
+        </div>
+        <div class="col-xl-4"></div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loadingFlag" class="row" id="loading-container">
+    <div class="col-xl-1"></div>
+    <div class="col-xl-10">
+      Loading....
+    </div>
+    <div class="col-xl-1"></div>
+  </div>
+</div>

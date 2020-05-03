@@ -1,0 +1,42 @@
+.card-horizontal {
+  display: flex;
+  flex: 1 1 auto;
+}
+.imgStyle {
+  margin: 28px;
+  width: 100px;
+  height: 100px;
+}
+
+.errorClass {
+  color: #ff4f60;
+  font-size: 1em;
+}
+
+.container-fluid {
+  min-height: 600px;
+}
+
+#datematpick {
+  height: 0;
+}
+#datematpick .mat-datepicker-toggle {
+  position: relative;
+}
+#datematpick input {
+  border: 1px solid #dfe3e8;
+  padding: 0 10px;
+  color: #495057;
+  border-radius: 4px;
+}
+#datematpick img {
+  width: 50%;
+  margin-top: -4px;
+}
+#datematpick .mat-icon-button {
+  background: transparent !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+#datematpick .invalid-feedback {
+  margin-top: -36px;
+}

@@ -1,0 +1,67 @@
+<div class="container-fluid" *ngIf="caseDetailsFlag">
+  <div id="casedetails-container">
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        <h2>{{ caseDetails.title }}</h2>
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        <strong
+          >{{ caseDetails.type }}
+          {{ caseDetails.occurred_at | date: "MMM d y" }} at
+          {{ caseDetails.address }}<br />Reported On:
+          {{ caseDetails.updated_at | date: "MMM d y" }}
+        </strong>
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        <div class="row">
+          <div class="col-xl-6" id="google-map-location">
+            <agm-map
+              [latitude]="latitude"
+              [longitude]="longitude"
+              [zoom]="zoom"
+            >
+            </agm-map>
+          </div>
+          <div class="col-xl-6" id="image-div">
+            <span *ngIf="caseDetails.media.image_url != null"
+              ><img
+                class="imgStyle"
+                src="{{ caseDetails.media.image_url }}"
+                alt="{{ caseDetails.title }}"
+            /></span>
+            <span *ngIf="caseDetails.media.image_url === null"
+              ><img
+                class="imgStyle"
+                src="assets/images/default-thumbnail.png"
+                alt="{{ caseDetails.title }}"
+            /></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        <h2>DESCRIPTION OF INCIDENT</h2>
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        {{ caseDetails.description }}
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+  </div>
+</div>
